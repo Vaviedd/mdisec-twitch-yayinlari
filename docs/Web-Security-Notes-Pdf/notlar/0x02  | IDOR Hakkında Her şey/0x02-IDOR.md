@@ -188,6 +188,8 @@ autochrome aracı için de buradaki bağlantıdan kurulumu yapabilirsiniz;
 Buraya kadar okuduğunuz için teşekkür ederim. Selametle …
 
 Vavi'den not:
+
+
 <img width="565" height="123" alt="resim" src="https://github.com/user-attachments/assets/316586c9-5ecc-4f6d-9bd4-b1b1c3887fd2" />
 
 
