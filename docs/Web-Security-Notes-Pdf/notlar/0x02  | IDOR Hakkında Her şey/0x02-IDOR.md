@@ -189,6 +189,8 @@ Buraya kadar okuduğunuz için teşekkür ederim. Selametle …
 
 Vavi'den not:
 <img width="565" height="123" alt="resim" src="https://github.com/user-attachments/assets/316586c9-5ecc-4f6d-9bd4-b1b1c3887fd2" />
+
+
 🚀 X-Original-URL: Neden Var ve Nasıl İstismar Ediliyor?
 
 X-Original-URL (ve benzeri olan X-Rewrite-URL), standart HTTP başlıkları değildir; genellikle Reverse Proxy (Nginx, Apache mod_proxy) veya Web Framework'leri (Symfony, Zend vb.) tarafından kullanılan özel (custom) başlıklardır.
@@ -196,23 +198,23 @@ X-Original-URL (ve benzeri olan X-Rewrite-URL), standart HTTP başlıkları değ
 
 Bazı karmaşık web mimarilerinde, isteğin ulaştığı ilk sunucu (Proxy), URL'yi değiştirerek arkadaki sunucuya (Back-end) iletir.
 
-    Örnek: Sen example.com/blog/post-1 adresine gidersin.
+  Örnek: Sen example.com/blog/post-1 adresine gidersin.
 
-    Proxy: Bu isteği alır ve arkadaki sunucuya internal.server/view?id=1 olarak gönderir.
+  Proxy: Bu isteği alır ve arkadaki sunucuya internal.server/view?id=1 olarak gönderir.
 
-    Sorun: Arka uçtaki uygulama, kullanıcının aslında hangi URL'yi talep ettiğini bilmek isteyebilir (log tutmak, link oluşturmak veya yetki kontrolü yapmak için).
+  Sorun: Arka uçtaki uygulama, kullanıcının aslında hangi URL'yi talep ettiğini bilmek isteyebilir (log tutmak, link oluşturmak veya yetki kontrolü yapmak için).
 
-    Çözüm: Proxy, orijinal yolu X-Original-URL: /blog/post-1 başlığına yazar.
+  Çözüm: Proxy, orijinal yolu X-Original-URL: /blog/post-1 başlığına yazar.
 
 2. Güvenlik Açığı Nasıl Oluşur? (Bypass Mantığı)
 
 Zafiyet, Güvenlik Duvarı (WAF) ile Uygulama arasındaki "güven ilişkisinden" kaynaklanır:
 
-    WAF/Proxy: Sadece asıl URL satırına (GET /) bakar. "Ana sayfa herkese açık, geçebilirsin" der.
+  WAF/Proxy: Sadece asıl URL satırına (GET /) bakar. "Ana sayfa herkese açık, geçebilirsin" der.
 
-    Uygulama: URL satırını değil, X-Original-URL başlığını "gerçek rota" olarak kabul edecek şekilde yapılandırılmıştır.
+  Uygulama: URL satırını değil, X-Original-URL başlığını "gerçek rota" olarak kabul edecek şekilde yapılandırılmıştır.
 
-    Saldırı: Saldırgan, URL satırına zararsız bir adres, başlığa ise yasaklı bir adres (/admin) yazarak güvenlik duvarını "atlatır".
+   Saldırı: Saldırgan, URL satırına zararsız bir adres, başlığa ise yasaklı bir adres (/admin) yazarak güvenlik duvarını "atlatır".
 
 # **KAYNAKÇA**
 
