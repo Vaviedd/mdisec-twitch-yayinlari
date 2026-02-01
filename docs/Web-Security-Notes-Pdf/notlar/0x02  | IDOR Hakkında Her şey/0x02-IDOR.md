@@ -188,6 +188,8 @@ autochrome aracı için de buradaki bağlantıdan kurulumu yapabilirsiniz;
 Buraya kadar okuduğunuz için teşekkür ederim. Selametle …
 
 Vavi'den not:
+PortSwigger Lablardan not etmek istediklerim:
+1-)X-Original-URL
 
 
 <img width="565" height="123" alt="resim" src="https://github.com/user-attachments/assets/316586c9-5ecc-4f6d-9bd4-b1b1c3887fd2" />
@@ -196,9 +198,9 @@ Vavi'den not:
 🚀 X-Original-URL: Neden Var ve Nasıl İstismar Ediliyor?
 
 X-Original-URL (ve benzeri olan X-Rewrite-URL), standart HTTP başlıkları değildir; genellikle Reverse Proxy (Nginx, Apache mod_proxy) veya Web Framework'leri (Symfony, Zend vb.) tarafından kullanılan özel (custom) başlıklardır.
-1. Neden Kullanılır? (Meşru Kullanım Amacı)
+ 1. Neden Kullanılır? (Meşru Kullanım Amacı)
 
-Bazı karmaşık web mimarilerinde, isteğin ulaştığı ilk sunucu (Proxy), URL'yi değiştirerek arkadaki sunucuya (Back-end) iletir.
+ Bazı karmaşık web mimarilerinde, isteğin ulaştığı ilk sunucu (Proxy), URL'yi değiştirerek arkadaki sunucuya (Back-end) iletir.
 
   Örnek: Sen example.com/blog/post-1 adresine gidersin.
 
@@ -208,15 +210,72 @@ Bazı karmaşık web mimarilerinde, isteğin ulaştığı ilk sunucu (Proxy), UR
 
   Çözüm: Proxy, orijinal yolu X-Original-URL: /blog/post-1 başlığına yazar.
 
-2. Güvenlik Açığı Nasıl Oluşur? (Bypass Mantığı)
+ 2. Güvenlik Açığı Nasıl Oluşur? (Bypass Mantığı)
 
-Zafiyet, Güvenlik Duvarı (WAF) ile Uygulama arasındaki "güven ilişkisinden" kaynaklanır:
+ Zafiyet, Güvenlik Duvarı (WAF) ile Uygulama arasındaki "güven ilişkisinden" kaynaklanır:
 
   WAF/Proxy: Sadece asıl URL satırına (GET /) bakar. "Ana sayfa herkese açık, geçebilirsin" der.
 
   Uygulama: URL satırını değil, X-Original-URL başlığını "gerçek rota" olarak kabul edecek şekilde yapılandırılmıştır.
 
    Saldırı: Saldırgan, URL satırına zararsız bir adres, başlığa ise yasaklı bir adres (/admin) yazarak güvenlik duvarını "atlatır".
+
+   
+
+2-)GET-POST
+Aslında bu labda yaptığım şey Cookie sessionı değiştirip admin methoduna ulaşmaktı fakat POST methodunda koruma olduğu için GET ile halletik.
+Normalde GET bir "bakma" metodudur, evet. Ama sunucu tarafındaki kod kötü yazılmışsa, sunucu metodun ne olduğuna bakmadan sadece gelen komuta odaklanır.
+
+
+
+
+
+<img width="1221" height="151" alt="resim" src="https://github.com/user-attachments/assets/6ede9212-593d-4ab4-9b97-44b24147ea3e" />
+
+
+
+
+
+
+
+
+
+<img width="1067" height="114" alt="resim" src="https://github.com/user-attachments/assets/c77dd522-173d-44fb-978c-081d4b074a1b" />
+
+
+
+
+
+
+
+
+1. Sunucu Tarafındaki "Metot Körü" Kod
+
+Geliştirici, kullanıcı silme veya yetki yükseltme kodunu yazarken genellikle bir "fonksiyon" oluşturur.
+
+    Olması Gereken: "Eğer istek POST ise ve içinde 'admin' yetkisi varsa işlemi yap."
+
+    Hatalı Olan: "Eğer istek içinde 'admin' komutu varsa işlemi yap." (Metodu kontrol etmeyi unutur).
+
+Bu durumda sunucu şunu der: "Gelen istek GET mi? Tamam. İçinde 'carlos'u sil' mi yazıyor? Tamam. Ben siliyorum o zaman." Sunucu, GET metodunun sadece "izlemek" için olduğunu bilmez; o sadece kendisine verilen komutu yerine getiren bir makinedir.
+2. URL Parametrelerini Suistimal Etme
+
+GET isteğinde veriler URL'nin sonuna eklenir (Query String).
+
+    Senin yaptığın işlemde normalde şöyle bir şey gidiyordu: POST /admin/delete?username=carlos
+
+    Sen bunu GET yaptığında URL şuna dönüştü: GET /admin/delete?username=carlos
+
+Uygulama, username=carlos bilgisini URL'den okuyacak şekilde yapılandırılmışsa (veya hem URL'den hem de Body'den veri okuyan "esnek" bir kütüphane kullanıyorsa), metodun ne olduğu onun için önemsizleşir.
+3. Güvenlik Duvarını (WAF) Kandırmak
+
+İşte "Seviye Yükseltme" (Privilege Escalation) kısmının can alıcı noktası:
+
+Güvenlik duvarları (WAF) genellikle pahalı ve yavaş işlemler yapmamak için sadece tehlikeli gördükleri kapıları tutarlar.
+
+    WAF'ın mantığı: "POST istekleri tehlikelidir çünkü veritabanını değiştirir, onları sıkı kontrol et. GET istekleri sadece resim/yazı çeker, onları hızlıca geçirebilirsin."
+
+    Sen GET kullanarak aslında güvenlik görevlisinin (WAF) yanından elini kolunu sallayarak geçtin. İçerideki odaya (Backend) girdiğinde ise zaten yetkili bir alana ulaştığın için istediğin "yıkıcı" komutu çalıştırabildin.
 
 # **KAYNAKÇA**
 
