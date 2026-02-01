@@ -189,7 +189,9 @@ Buraya kadar okuduğunuz için teşekkür ederim. Selametle …
 
 Vavi'den not:
 PortSwigger Lablardan not etmek istediklerim:
-1-)X-Original-URL
+
+
+A-)X-Original-URL
 
 
 <img width="565" height="123" alt="resim" src="https://github.com/user-attachments/assets/316586c9-5ecc-4f6d-9bd4-b1b1c3887fd2" />
@@ -222,7 +224,9 @@ X-Original-URL (ve benzeri olan X-Rewrite-URL), standart HTTP başlıkları değ
 
    
 
-2-)GET-POST
+B-)GET-POST
+
+
 Aslında bu labda yaptığım şey Cookie sessionı değiştirip admin methoduna ulaşmaktı fakat POST methodunda koruma olduğu için GET ile halletik.
 Normalde GET bir "bakma" metodudur, evet. Ama sunucu tarafındaki kod kötü yazılmışsa, sunucu metodun ne olduğuna bakmadan sadece gelen komuta odaklanır.
 
